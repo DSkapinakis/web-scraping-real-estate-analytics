@@ -12,7 +12,7 @@ from sklearn.pipeline import Pipeline
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-# Google  place ids
+# Google  place ids - to be further enhanced
 geo_ids = {}
 geo_ids['exarcheia'] = 'ChIJk8jKmja9oRQRck07-S29ACY'
 geo_ids['kolonaki'] = 'ChIJwdDKbEe9oRQREk47-S29ACY'
