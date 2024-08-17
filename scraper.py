@@ -1,4 +1,3 @@
-
 #import libraries
 import pandas as pd
 from selenium import webdriver
@@ -28,7 +27,6 @@ geo_ids['glyfada'] = 'ChIJr3Ztlyi-oRQR6El5e7CyRpM'
 
 """
 Main functions of the scraper program following
-
 """
 
 def base_url(transaction_type, item_type, location_id = False):
@@ -47,7 +45,6 @@ def base_url(transaction_type, item_type, location_id = False):
     else:
         return f'https://www.xe.gr/en/property/results?transaction_name={transaction_type}&item_type={item_type}&sorting=create_desc&geo_place_ids%5B%5D={location_id}'
     
-
 def batch_pages(a):
 
     k=[]
