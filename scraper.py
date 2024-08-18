@@ -11,7 +11,7 @@ from sklearn.pipeline import Pipeline
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-# Google  place ids - to be further enhanced
+# Google  place ids - to be further enhanced (in an updated version, google places api could be used instead)
 geo_ids = {}
 geo_ids['exarcheia'] = 'ChIJk8jKmja9oRQRck07-S29ACY'
 geo_ids['kolonaki'] = 'ChIJwdDKbEe9oRQREk47-S29ACY'
@@ -35,7 +35,7 @@ def base_url(transaction_type, item_type, location_id = False):
     valid_item_type = {'re_residence','re_prof','re_land','re_parking'}
 
 
-    if transaction_type not in valid_transaction_type:
+    if transaction_type not in valid_transaction_type: 
         raise ValueError('base_url: transactiont_type should be one of %r.' % valid_transaction_type)
     if item_type not in valid_item_type:
         raise ValueError('base_url: item_type should be one of %r.' % valid_item_type)
@@ -46,7 +46,7 @@ def base_url(transaction_type, item_type, location_id = False):
         return f'https://www.xe.gr/en/property/results?transaction_name={transaction_type}&item_type={item_type}&sorting=create_desc&geo_place_ids%5B%5D={location_id}'
     
 def batch_pages(a):
-
+    # algo to get pages in batches
     k=[]
     l=[]
     count=0
@@ -71,7 +71,7 @@ def pages2scrape(num):
     return pages
 
 def extract_url_prop(base_url, start_page, end_page):
-    
+    # give a base_url (the main page with all properties), and extract specific url for each property
     urls = []
     for i in range(start_page, end_page+1):
         reqs = requests.get(base_url + f'&page={i}')
@@ -90,7 +90,7 @@ def extract_url_prop(base_url, start_page, end_page):
 
 
 def extract_data(url):
-    
+    # for each property url, get data through the html parser
     driver = webdriver.Chrome()
     driver.get(url)
     content = driver.page_source
@@ -143,8 +143,9 @@ def extract_data(url):
     return dic
 
 def prop_to_df(property_urls):
+    # properties to dataframes
 
-    data = {}    # extract preperty data
+    data = {}    # extract property data
     for i,l in enumerate(property_urls):  
         data[i] = extract_data(l) 
     
@@ -163,7 +164,8 @@ def prop_to_df(property_urls):
     return df
 
 def batch_scraping(location, transaction_type, item_type, num_pages):
-    
+    # extract properties in batches, in order to minimize the risk of triggering recaptcha bot
+
     print(f'Scraping data for {location}...  (details: {transaction_type}, {item_type})')
     pages = pages2scrape(num_pages)
     loc_url = base_url(transaction_type, item_type, geo_ids[location])

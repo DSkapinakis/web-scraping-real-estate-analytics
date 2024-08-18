@@ -76,7 +76,7 @@ heating_system_features = ['Autonomous heating centrally installed',
 
 
 '''
-Encoder class and preprocessing functions of the program - helpers for main Transform function
+Encoder class and preprocessing functions of the program - helpers for main Transform() function
 '''
 
 class CustomEncoder(BaseEstimator, TransformerMixin):
@@ -118,7 +118,8 @@ def assign_heating_system(row):
 
 
 '''
-Transform Function
+Transform Function: takes as input a raw dataframe and returns a preprocessed one without missing values and
+redundant features. Also it defines a data schema got certain variables. 
 '''
 
 
@@ -154,21 +155,21 @@ def Transform(df):
 
     df_transformed = deepcopy(df)
 
-    #delete features
+    # delete features
     if any(i in df_transformed.columns for i in feature_to_delete):
         df_transformed = df_transformed.drop(columns = [i for i in feature_to_delete if i in df_transformed.columns])
 
-    #binary imputation 1 - 0 (nan)
+    # binary imputation 1 - 0 (nan)
     if any(i in df_transformed.columns for i in binary_features_to_impute):
         enc = CustomEncoder(columns = [i for i in binary_features_to_impute if i in df_transformed.columns])
         df_transformed = enc.fit_transform(df_transformed)
     
-    #imputation not specified
+    # imputation not specified
     if any(i in df_transformed.columns for i in features_to_impute_nan):
         for feature in [i for i in features_to_impute_nan if i in df_transformed.columns]:
             df_transformed[feature] = df_transformed[feature].apply(lambda x: 'Not specified' if  pd.isna(x) else x)
 
-    #heating 1 - 0
+    # heating 1 - 0
     if 'No heating' in df_transformed.columns:
         df_transformed['Heating'] = df_transformed.apply(assign_heating, axis=1)
         df_transformed = df_transformed.drop(columns='No heating')
